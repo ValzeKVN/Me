@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kevin Valenzuela</title>
+<style>
+  :root{
+    --bg:#111009;
+    --bg-grain-opacity:0.05;
+    --card:#1a1812;
+    --card-border:#2c2a22;
+    --card-border-hover:#413d30;
+    --text-0:#f1ede2;
+    --text-1:#b5aea0;
+    --text-2:#7a7466;
+    --moss:#7c8c5a;
+    --moss-dim:#5c6a42;
+    --clay:#a8764f;
+    --clay-dim:#8a5f3d;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html{ background:var(--bg); }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    background-color:var(--bg);
+    background-image:
+      radial-gradient(700px 380px at 12% -8%, rgba(124,140,90,0.10), transparent 60%),
+      radial-gradient(600px 340px at 100% 6%, rgba(168,118,79,0.09), transparent 55%);
+    color:var(--text-0);
+    font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding:56px 20px 64px;
+    display:flex;
+    justify-content:center;
+    position:relative;
+  }
+
+  /* subtle grain overlay so the flat gradient bg doesn't read as a generic AI-template glow */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:var(--bg-grain-opacity);
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode:overlay;
+  }
+
+  .page{
+    width:100%;
+    max-width:600px;
+    position:relative;
+  }
+
+  /* ---------- Header ---------- */
+
+  .header{
+    text-align:center;
+    margin-bottom:34px;
+  }
+
+  .avatar{
+    width:92px;
+    height:92px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    overflow:hidden;
+    background:linear-gradient(155deg, var(--moss-dim), var(--clay-dim));
+    border:1px solid var(--card-border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .avatar .fallback{
+    font-size:34px;
+    font-weight:700;
+    color:var(--text-0);
+    letter-spacing:-1px;
+  }
+
+  h1{
+    margin:0 0 12px;
+    font-size:clamp(24px, 5vw, 30px);
+    font-weight:700;
+    letter-spacing:-0.01em;
+  }
+
+  .bio{
+    margin:0 auto;
+    max-width:420px;
+    color:var(--text-1);
+    font-size:15.5px;
+    line-height:1.55;
+  }
+
+  /* ---------- Stat cards ---------- */
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:10px;
+    margin:26px 0 34px;
+    max-width:280px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .stat-card{
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:10px;
+    padding:11px 10px;
+    text-align:center;
+    position:relative;
+    transition:border-color .18s ease;
+  }
+
+  .stat-card:hover{ border-color:var(--card-border-hover); }
+
+  .stat-number{
+    font-size:clamp(16px, 3.6vw, 19px);
+    font-weight:700;
+    letter-spacing:-0.01em;
+    color:var(--text-0);
+    line-height:1.15;
+    display:inline-block;
+    position:relative;
+  }
+
+  .stat-number.pizza{
+    background:linear-gradient(120deg, var(--moss), var(--clay));
+    -webkit-background-clip:text;
+    background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+
+  .stat-number.bump{
+    animation:bump 0.5s ease;
+  }
+
+  @keyframes bump{
+    0%{ transform:translateY(0); opacity:1; }
+    35%{ transform:translateY(-6px); opacity:0.4; }
+    36%{ transform:translateY(6px); }
+    100%{ transform:translateY(0); opacity:1; }
+  }
+
+  .stat-label{
+    margin-top:2px;
+    font-size:10px;
+    color:var(--text-2);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-weight:600;
+  }
+
+  /* ---------- Section label ---------- */
+
+  .section-label{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    color:var(--text-2);
+    font-weight:700;
+    margin:0 0 12px 2px;
+  }
+
+  /* ---------- Links ---------- */
+
+  .links{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .link-card{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:12px;
+    padding:12px 16px;
+    text-decoration:none;
+    color:var(--text-0);
+    transition:border-color .16s ease, background .16s ease;
+  }
+
+  .link-card:hover{
+    border-color:var(--card-border-hover);
+    background:#1f1c15;
+  }
+
+  .link-icon{
+    flex:0 0 auto;
+    width:38px;
+    height:38px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#141310;
+    border:1px solid var(--card-border);
+  }
+
+  .link-icon svg{ width:20px; height:20px; display:block; }
+
+  .link-text{ flex:1 1 auto; min-width:0; }
+
+  .link-title{
+    font-weight:600;
+    font-size:15px;
+  }
+
+  .link-arrow{
+    flex:0 0 auto;
+    color:var(--text-2);
+    font-size:16px;
+  }
+
+  /* ---------- Footer ---------- */
+
+  footer{
+    text-align:center;
+    margin-top:48px;
+    color:var(--text-2);
+    font-size:12.5px;
+  }
+
+  footer a{
+    color:var(--text-1);
+    text-decoration:none;
+    border-bottom:1px solid var(--card-border);
+  }
+
+  @media (max-width:420px){
+    .stats{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header">
+    <div class="avatar">
+      <img src="profile.jpg" alt="Kevin Valenzuela"
+           onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'fallback',textContent:'KV'}))">
+    </div>
+    <h1>Kevin Valenzuela</h1>
+    <p class="bio">I break things more than I fix them and like to do a little camping in between.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <span class="stat-number" id="vehicles-number">3</span>
+      <div class="stat-label">Vehicles Flipped</div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-number pizza" id="pizza-number">729,473</span>
+      <div class="stat-label">Pizzas Eaten</div>
+    </div>
+  </div>
+
+  <p class="section-label">Find me here</p>
+
+  <div class="links">
+
+    <a class="link-card" href="https://smartcards.pro/21Ypvg" target="_blank" rel="noopener">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="#c9c2b2" stroke-width="1.6"/><path d="M2 9h20" stroke="#c9c2b2" stroke-width="1.6"/><path d="M6 14h4" stroke="#c9c2b2" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </span>
+      <span class="link-text">
+        <div class="link-title">AIT &mdash; Data Analyst</div>
+      </span>
+      <span class="link-arrow">&rarr;</span>
+    </a>
+
+    <a class="link-card" href="https://www.linkedin.com/in/kevin-valenzuela-96a562158" target="_blank" rel="noopener">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#0A66C2"/><path fill="#fff" d="M7.12 9.4H4.4V19h2.72V9.4ZM5.76 8.2a1.58 1.58 0 1 0 0-3.16 1.58 1.58 0 0 0 0 3.16ZM19.6 19h-2.72v-5.19c0-1.24-.02-2.83-1.72-2.83-1.73 0-2 1.35-2 2.74V19H10.4V9.4h2.61v1.31h.04c.36-.68 1.25-1.4 2.58-1.4 2.76 0 3.27 1.82 3.27 4.18V19Z"/></svg>
+      </span>
+      <span class="link-text">
+        <div class="link-title">Let's connect on LinkedIn</div>
+      </span>
+      <span class="link-arrow">&rarr;</span>
+    </a>
+
+    <a class="link-card" href="https://www.instagram.com/_iamkevin95" target="_blank" rel="noopener">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24">
+          <defs>
+            <radialGradient id="igGrad" cx="30%" cy="107%" r="150%">
+              <stop offset="0%" stop-color="#fdf497"/>
+              <stop offset="10%" stop-color="#fdf497"/>
+              <stop offset="28%" stop-color="#fd5949"/>
+              <stop offset="45%" stop-color="#d6249f"/>
+              <stop offset="70%" stop-color="#285AEB"/>
+            </radialGradient>
+          </defs>
+          <rect x="2" y="2" width="20" height="20" rx="6" fill="url(#igGrad)"/>
+          <rect x="6.2" y="6.2" width="11.6" height="11.6" rx="4" fill="none" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="12" cy="12" r="3.2" fill="none" stroke="#fff" stroke-width="1.5"/>
+          <circle cx="16.6" cy="7.4" r="1" fill="#fff"/>
+        </svg>
+      </span>
+      <span class="link-text">
+        <div class="link-title">Follow me on Instagram</div>
+      </span>
+      <span class="link-arrow">&rarr;</span>
+    </a>
+
+    <a class="link-card" href="https://www.tiktok.com/@_iamkevin95" target="_blank" rel="noopener">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24">
+          <rect width="24" height="24" rx="6" fill="#000"/>
+          <path fill="#25F4EE" d="M14.7 5h2c.12 1.32.86 2.62 2.3 3.34v2.03c-.9-.02-1.75-.3-2.53-.78v4.53c0 2.6-2.1 4.7-4.7 4.7a4.7 4.7 0 0 1-1.6-9.13v2.16a2.62 2.62 0 1 0 1.6 2.41V5Z"/>
+          <path fill="#FE2C55" d="M14.4 4.7h2c.12 1.32.86 2.62 2.3 3.34v2.03c-.9-.02-1.75-.3-2.53-.78v4.53c0 2.6-2.1 4.7-4.7 4.7a4.7 4.7 0 0 1-1.6-9.13v2.16a2.62 2.62 0 1 0 1.6 2.41V4.7Z" opacity="0.7"/>
+          <path fill="#fff" d="M14.55 4.85h2c.12 1.32.86 2.62 2.3 3.34v2.03c-.9-.02-1.75-.3-2.53-.78v4.53c0 2.6-2.1 4.7-4.7 4.7a4.7 4.7 0 0 1-1.6-9.13v2.16a2.62 2.62 0 1 0 1.6 2.41V4.85Z"/>
+        </svg>
+      </span>
+      <span class="link-text">
+        <div class="link-title">Follow me on TikTok</div>
+      </span>
+      <span class="link-arrow">&rarr;</span>
+    </a>
+
+  </div>
+
+  <footer>
+    Built &amp; broken by <a href="https://www.linkedin.com/in/kevin-valenzuela-96a562158" target="_blank" rel="noopener">Kevin Valenzuela</a>
+  </footer>
+
+</div>
+
+<script>
+  // Running-gag pizza counter. Not a real count — just ticks up once shortly
+  // after load, and once more if someone actually sticks around for 3 minutes.
+  (function(){
+    var el = document.getElementById('pizza-number');
+    var base = 729473;
+    var bumps = 0;
+
+    function render(n){
+      el.textContent = n.toLocaleString('en-US');
+      el.classList.remove('bump');
+      void el.offsetWidth; // restart animation
+      el.classList.add('bump');
+    }
+
+    function bump(){
+      bumps += 1;
+      render(base + bumps);
+    }
+
+    setTimeout(bump, 3000);              // quick first bump so people notice it's "live"
+    setTimeout(bump, 3 * 60 * 1000);     // one more if they're still here in 3 minutes
+  })();
+</script>
+
+</body>
+</html>
