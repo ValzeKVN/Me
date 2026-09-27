@@ -41,12 +41,13 @@
   }
   .card-tab.active{ color:var(--acc-soft); border-bottom-color:var(--acc); }
 
-  .icon-row{ display:flex; justify-content:center; gap:16px; }
-  .icon-btn{ display:flex; flex-direction:column; align-items:center; gap:6px; text-decoration:none; }
-  .icon-circle{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#232323; color:var(--acc-soft); border:1px solid #333; transition: transform .16s ease; }
-  .icon-circle svg{ width:18px; height:18px; }
-  .icon-label{ font-size:9.5px; font-weight:600; color:#8a8a8a; letter-spacing:.01em; }
-  .icon-btn:hover .icon-circle{ transform:translateY(-3px); }
+  .qlabel{ font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#6b6b6b; text-align:left; margin:0 0 10px; }
+  .icon-row{ display:flex; justify-content:center; gap:20px; }
+  .icon-btn{ display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; }
+  .icon-circle{ width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#232323; color:var(--acc-soft); border:1.5px solid #3a3a3a; transition: transform .16s ease, border-color .16s ease; }
+  .icon-circle svg{ width:24px; height:24px; }
+  .icon-label{ font-size:11px; font-weight:700; color:#c9c9c9; letter-spacing:.01em; }
+  .icon-btn:hover .icon-circle{ transform:translateY(-3px); border-color:var(--acc); }
   .footer{ text-align:center; font-size:11px; padding:16px 24px 20px; background:#161616; color:#6b6b6b; }
   .footer a{ color:#9c9c9c; text-decoration:none; border-bottom:1px solid #3a3a3a; }
 
@@ -149,6 +150,7 @@
           </div>
           <span class="teaser-arrow">&rarr;</span>
         </div>
+        <p class="qlabel">Quick Links</p>
         <div class="icon-row">
           <a class="icon-btn" href="Kevin-Valenzuela-Resume.pdf" target="_blank" rel="noopener"><span class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 2h7l5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke-linejoin="round"/><path d="M14 2v5h5" stroke-linejoin="round"/></svg></span><span class="icon-label">Resume</span></a>
           <a class="icon-btn" href="https://smartcards.pro/21Ypvg" target="_blank" rel="noopener"><span class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><circle cx="8" cy="10.3" r="1.7"/><path d="M5.3 15.5c.4-1.5 1.6-2.3 2.7-2.3s2.3.8 2.7 2.3" stroke-linecap="round"/></svg></span><span class="icon-label">Contact</span></a>
