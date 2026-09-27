@@ -6,9 +6,8 @@ My personal link-in-bio page — a single-page site with quick links to my resum
 
 ## What's here
 
-- `index.html` — the page (self-contained: HTML, CSS, and a little JS, no build step)
+- `index.html` — the page (fully self-contained: HTML, CSS, and a little JS, no build step). The avatar photo is embedded inline as a base64 data URI, so there's no separate image file to keep in sync or break a link to.
 - `Kevin-Valenzuela-Resume.pdf` — my current resume, linked from the page
-- `profile.jpg` — avatar image (falls back to initials if missing)
 
 ## Links on the page
 
