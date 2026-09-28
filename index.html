@@ -9,18 +9,23 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --acc:#c9963c; --acc-soft:#dcb15f; --acc-ink:#1b1509;
+    /* palette: deeper olive-forest green + dark charcoal-olive + neutral tan */
+    --acc:#55693f; --acc-soft:#3a4a2c; --acc-deep:#28331e; --acc-ink:#f1f5ec;
+    --acc-tint:#cdd8bb; --acc-tint-border:#a9bb8e;
+    --ink:#1f1e1a; --ink-soft:#3a3833; --muted:#6e5f4d; --muted-2:#8a7a64;
+    --surface:#eae6d8; --surface-2:#e3d6bf; --surface-3:#d6c4a3;
+    --border:#c9b896; --border-strong:#b09e78;
   }
   *{ box-sizing:border-box; }
-  html{ background:#0d0d0d; }
+  html{ background:#4f3d29; }
   body{
     margin:0;
     min-height:100vh;
     background:
-      radial-gradient(600px 340px at 12% -8%, rgba(201,150,60,0.10), transparent 60%),
-      radial-gradient(500px 300px at 100% 6%, rgba(201,150,60,0.06), transparent 55%),
-      #0d0d0d;
-    color:#e6e6e6;
+      radial-gradient(600px 340px at 12% -8%, rgba(180,150,100,0.30), transparent 60%),
+      radial-gradient(500px 300px at 100% 6%, rgba(150,120,80,0.25), transparent 55%),
+      #4f3d29;
+    color:var(--ink);
     font-family: Inter, -apple-system, "Segoe UI", sans-serif;
     display:flex;
     justify-content:center;
@@ -29,94 +34,148 @@
 
   .page{ width:100%; max-width:460px; }
 
-  .ind-card{ background:#161616; border-radius:18px; overflow:hidden; box-shadow:0 24px 60px rgba(0,0,0,.4); }
+  .ind-card{ background:var(--surface); border-radius:18px; overflow:hidden; box-shadow:0 20px 50px rgba(60,50,30,.14); }
 
   /* in-card tab switcher */
-  .card-tabs{ display:flex; background:#0d0d0d; }
+  .card-tabs{ display:flex; background:var(--surface-3); }
   .card-tab{
     flex:1; border:none; background:transparent; cursor:pointer;
-    padding:13px 8px; font-family:"Oswald","Inter",sans-serif; font-size:11.5px;
-    font-weight:600; letter-spacing:.02em; color:#6b6b6b;
+    padding:13px 4px; font-family:"Oswald","Inter",sans-serif; font-size:10.5px;
+    font-weight:600; letter-spacing:.01em; color:var(--muted);
     border-bottom:2px solid transparent;
   }
-  .card-tab.active{ color:var(--acc-soft); border-bottom-color:var(--acc); }
+  .card-tab.active{ color:var(--ink); border-bottom-color:var(--acc); }
 
-  .qlabel{ font-size:10px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:#6b6b6b; text-align:left; margin:0 0 10px; }
-  .icon-row{ display:flex; justify-content:center; gap:20px; }
-  .icon-btn{ display:flex; flex-direction:column; align-items:center; gap:8px; text-decoration:none; }
-  .icon-circle{ width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center; background:#232323; color:var(--acc-soft); border:1.5px solid #3a3a3a; transition: transform .16s ease, border-color .16s ease; }
-  .icon-circle svg{ width:24px; height:24px; }
-  .icon-label{ font-size:11px; font-weight:700; color:#c9c9c9; letter-spacing:.01em; }
-  .icon-btn:hover .icon-circle{ transform:translateY(-3px); border-color:var(--acc); }
-  .footer{ text-align:center; font-size:11px; padding:16px 24px 20px; background:#161616; color:#6b6b6b; }
-  .footer a{ color:#9c9c9c; text-decoration:none; border-bottom:1px solid #3a3a3a; }
+  .ind-cta-secondary{ display:block; margin-top:10px; background:transparent; border:1.5px solid var(--acc); color:var(--ink); text-decoration:none; font-size:12.5px; font-weight:800; letter-spacing:.02em; padding:11.5px; border-radius:6px; text-align:center; transition: transform .16s ease, background-color .16s ease; }
+  .ind-cta-secondary:hover{ transform:translateY(-2px); background:rgba(85,105,63,.16); }
+  .footer{ text-align:center; font-size:11px; padding:16px 24px 20px; background:var(--surface); color:var(--muted); }
+  .footer a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--acc-tint-border); }
 
   .ind-head{
     position:relative; overflow:hidden; padding:28px 24px 18px; text-align:center;
-    background:
-      repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 2px, transparent 2px 14px),
-      linear-gradient(160deg, #1d1d1d, #0d0d0d);
+    background: linear-gradient(150deg, var(--surface-2) 0%, var(--surface-3) 100%);
     border-bottom:3px solid var(--acc);
   }
-  .ind-avatar{ width:72px; height:72px; border-radius:10px; margin:0 auto 12px; overflow:hidden; border:2px solid #3a3a3a; }
+  .ind-avatar{ width:72px; height:72px; border-radius:10px; margin:0 auto 12px; overflow:hidden; border:3px solid #fff; box-shadow:0 0 0 1px var(--border); }
   .ind-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .ind-name{ font-family:"Oswald","Inter",sans-serif; font-weight:600; font-size:20px; letter-spacing:.01em; color:#fff; margin:0 0 4px; }
-  .ind-role{ font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--acc-soft); margin:0; }
-  .ind-body{ padding:24px 24px 4px; text-align:center; background:#161616; }
+  .ind-name{ font-family:"Oswald","Inter",sans-serif; font-weight:600; font-size:20px; letter-spacing:.01em; color:var(--ink); margin:0 0 4px; }
+  .ind-role{ font-size:11px; font-weight:700; letter-spacing:.03em; color:var(--ink); margin:0; }
+  .ind-body{ padding:24px 24px 4px; text-align:center; background:var(--surface); }
 
   .teaser{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    background:#1e1e1e; border:1px solid #2a2a2a; border-radius:11px;
+    background:var(--surface-2); border:1px solid var(--border); border-radius:11px;
     padding:12px 14px; margin-bottom:20px; cursor:pointer;
     transition: transform .16s ease, border-color .16s ease;
   }
-  .teaser:hover{ transform:translateY(-2px); border-color:#3a3a3a; }
-  .teaser-num{ font-family:"Oswald","Inter",sans-serif; font-size:20px; font-weight:700; color:var(--acc-soft); font-variant-numeric:tabular-nums; white-space:nowrap; text-align:left; }
-  .teaser-text{ font-size:10.5px; color:#9c9c9c; text-align:left; line-height:1.35; margin-top:2px; }
-  .teaser-text b{ color:#d8d8d8; }
-  .teaser-arrow{ color:var(--acc-soft); font-size:14px; flex:0 0 auto; }
+  .teaser:hover{ transform:translateY(-2px); border-color:var(--border-strong); }
+  .teaser-num{ font-family:"Oswald","Inter",sans-serif; font-size:20px; font-weight:700; color:var(--ink); font-variant-numeric:tabular-nums; white-space:nowrap; text-align:left; }
+  .teaser-text{ font-size:10.5px; color:var(--muted); text-align:left; line-height:1.35; margin-top:2px; }
+  .teaser-text b{ color:var(--ink); }
+  .teaser-arrow{ color:var(--ink); font-size:14px; flex:0 0 auto; }
 
   .ind-cta{ display:block; margin-top:22px; background:var(--acc); color:var(--acc-ink); text-decoration:none; font-size:12.5px; font-weight:800; letter-spacing:.02em; padding:13px; border-radius:6px; text-align:center; transition: transform .16s ease, box-shadow .16s ease; }
-  .ind-cta:hover{ transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.3); }
+  .ind-cta:hover{ transform:translateY(-2px); box-shadow:0 10px 20px rgba(85,105,63,.32); }
 
   /* ============ TAB PANELS ============ */
-  .dash{ padding:22px 22px 6px; background:#161616; }
+  .dash{ padding:22px 22px 6px; background:var(--surface); }
   .dash-mini{ display:flex; align-items:center; gap:10px; margin-bottom:20px; }
-  .dash-mini-avatar{ width:34px; height:34px; border-radius:7px; overflow:hidden; flex:0 0 auto; border:1px solid #3a3a3a; }
+  .dash-mini-avatar{ width:34px; height:34px; border-radius:7px; overflow:hidden; flex:0 0 auto; border:1px solid var(--border); }
   .dash-mini-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-  .dash-mini-name{ font-size:12.5px; font-weight:700; color:#fff; margin:0; }
-  .dash-mini-role{ font-size:10px; color:#7a7a7a; margin:0; }
+  .dash-mini-name{ font-size:12.5px; font-weight:700; color:var(--ink); margin:0; }
+  .dash-mini-role{ font-size:10px; color:var(--muted); margin:0; }
 
   .chart-block{ margin-bottom:26px; }
-  .chart-title{ font-size:9.5px; font-weight:700; letter-spacing:.04em; color:#7a7a7a; margin:0 0 12px; }
+  .chart-title{ font-size:9.5px; font-weight:700; letter-spacing:.04em; color:var(--muted); margin:0 0 12px; }
   .chart-svg{ width:100%; height:auto; display:block; overflow:visible; }
 
   .kpi-row{ display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:24px; }
   .kpi-row.cols-3{ grid-template-columns:repeat(3, 1fr); }
   .kpi-row.cols-2{ grid-template-columns:repeat(2, 1fr); max-width:220px; margin-left:auto; margin-right:auto; }
-  .kpi-card{ background:#1e1e1e; border:1px solid #2a2a2a; border-radius:9px; padding:11px 6px; text-align:center; }
-  .kpi-card.hero{ background:#241c0e; border-color:#3a2c14; }
-  .kpi-num{ font-family:"Oswald","Inter",sans-serif; font-size:17px; font-weight:600; color:#e6e6e6; line-height:1.1; font-variant-numeric:tabular-nums; }
-  .kpi-card.hero .kpi-num{ color:var(--acc-soft); }
-  .kpi-label{ font-size:7.8px; letter-spacing:.01em; color:#7a7a7a; margin-top:4px; line-height:1.25; display:block; }
+  .kpi-card{ background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:11px 6px; text-align:center; }
+  .kpi-card.hero{ background:var(--acc-tint); border-color:var(--acc-tint-border); }
+  .kpi-num{ font-family:"Oswald","Inter",sans-serif; font-size:17px; font-weight:600; color:var(--ink); line-height:1.1; font-variant-numeric:tabular-nums; }
+  .kpi-card.hero .kpi-num{ color:var(--ink); }
+  .kpi-label{ font-size:7.8px; letter-spacing:.01em; color:var(--muted); margin-top:4px; line-height:1.25; display:block; }
 
-  .gov-note{ font-size:10.5px; color:#7a7a7a; font-style:italic; margin:0 0 18px; line-height:1.5; }
-  .gov-note strong{ color:#9c9c9c; font-style:normal; }
+  .slicer-block{ display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border); }
+  .slicer-field{ flex:1 1 100px; text-align:left; }
+  .slicer-label{ font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin:0 0 6px; display:block; }
+  .slicer-select{
+    width:100%; appearance:none; -webkit-appearance:none;
+    background:var(--surface) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%238a7f6b" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>') no-repeat right 10px center;
+    background-size:14px 14px;
+    border:1px solid var(--border-strong); color:var(--ink); font-family:"Inter",sans-serif;
+    font-size:11.5px; font-weight:600; padding:9px 26px 9px 10px; border-radius:8px; cursor:pointer;
+  }
+  .slicer-select:focus{ outline:none; border-color:var(--acc); }
+  .range-pair{ display:flex; gap:6px; }
+
+  .chart-title-row{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .chart-title-row .chart-title{ margin:0; }
+  .drill-back{ font-size:9.5px; font-weight:700; color:var(--ink); background:none; border:none; cursor:pointer; padding:0; font-family:inherit; }
+  .drill-hint{ font-size:9px; color:var(--muted-2); font-style:italic; margin:8px 0 0; text-align:center; }
+
+  .matrix-wrap{ overflow-x:auto; }
+  .matrix-table{ width:100%; min-width:340px; border-collapse:collapse; font-size:9px; }
+  .matrix-table th, .matrix-table td{ padding:6px 5px; text-align:right; white-space:nowrap; font-variant-numeric:tabular-nums; }
+  .matrix-table th.row-head, .matrix-table td.row-head{ text-align:left; font-weight:700; color:var(--ink); white-space:normal; }
+  .matrix-table thead th{ color:var(--muted); font-weight:700; font-size:8px; text-transform:uppercase; letter-spacing:.02em; border-bottom:1px solid var(--border); }
+  .matrix-table tbody td{ color:var(--ink-soft); }
+  .matrix-table tfoot td, .matrix-table tfoot th{ border-top:1px solid var(--border); font-weight:700; color:var(--ink); }
+  .matrix-winner{ color:var(--ink) !important; font-weight:800 !important; }
+  .matrix-hl{ outline:1.5px solid var(--acc); outline-offset:-1.5px; }
+
+  .csv-download{
+    display:block; width:100%; text-align:center; background:transparent; border:1.5px solid var(--acc);
+    color:var(--ink); font-family:inherit; font-size:11.5px; font-weight:800; letter-spacing:.02em;
+    padding:11px; border-radius:6px; cursor:pointer; margin-top:6px;
+    transition: background-color .16s ease, transform .16s ease;
+  }
+  .csv-download:hover{ background:rgba(85,105,63,.16); transform:translateY(-2px); }
 
   .swot-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:4px 0 18px; }
-  .swot-box{ background:#1e1e1e; border:1px solid #2a2a2a; border-radius:9px; padding:11px 12px 9px; }
-  .swot-title{ font-size:9px; font-weight:700; letter-spacing:.03em; color:var(--acc-soft); margin:0 0 6px; }
-  .swot-box ul{ margin:0; padding-left:13px; font-size:10px; color:#bdbdbd; line-height:1.5; }
+  .swot-box{ background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:11px 12px 9px; }
+  .swot-title{ font-size:9px; font-weight:700; letter-spacing:.03em; color:var(--ink); margin:0 0 6px; }
+  .swot-box ul{ margin:0; padding-left:13px; font-size:10px; color:var(--ink-soft); line-height:1.5; }
   .swot-box li{ margin-bottom:2px; }
 
   .highlight-line{
     text-align:center; font-family:"Oswald","Inter",sans-serif; font-size:22px; font-weight:700;
-    color:var(--acc-soft); line-height:1.25; margin:6px 0 20px; letter-spacing:.01em;
+    color:var(--ink); line-height:1.25; margin:6px 0 20px; letter-spacing:.01em;
   }
 
+  /* ============ RESUME TAB ============ */
+  .resume-header{ text-align:center; margin-bottom:6px; }
+  .resume-name{ font-family:"Oswald","Inter",sans-serif; font-weight:600; font-size:19px; color:var(--ink); margin:0 0 3px; }
+  .resume-title{ font-size:11px; font-weight:700; color:var(--ink); margin:0 0 4px; }
+  .resume-meta{ font-size:10.5px; color:var(--muted); margin:0 0 16px; }
+  .resume-meta a{ color:var(--ink); text-decoration:none; border-bottom:1px solid var(--acc-tint-border); }
+  .resume-download{
+    display:block; text-align:center; background:var(--acc); color:var(--acc-ink); text-decoration:none;
+    font-size:12px; font-weight:800; letter-spacing:.02em; padding:11px; border-radius:6px; margin-bottom:22px;
+  }
+  .resume-section{ text-align:left; margin-bottom:20px; }
+  .resume-summary{ font-size:11.5px; color:var(--ink-soft); line-height:1.65; }
+  .skill-row{ margin-bottom:8px; }
+  .skill-row b{ display:block; font-size:10px; color:var(--ink); margin-bottom:1px; }
+  .skill-row span{ font-size:10.5px; color:var(--muted); line-height:1.5; }
+  .job-block{ margin-bottom:16px; }
+  .job-company-row{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .job-company{ font-weight:700; color:var(--ink); font-size:12.5px; }
+  .job-dates{ font-size:10px; color:var(--muted); white-space:nowrap; }
+  .job-location{ font-size:10.5px; color:var(--muted); margin:1px 0 6px; }
+  .job-role-row{ display:flex; justify-content:space-between; gap:8px; margin:5px 0 1px; }
+  .job-role{ font-size:11px; font-weight:600; color:var(--ink); }
+  .job-role-dates{ font-size:9.5px; color:var(--muted-2); white-space:nowrap; }
+  .job-bullets{ margin:6px 0 0; padding-left:15px; font-size:10.5px; color:var(--ink-soft); line-height:1.55; }
+  .job-bullets li{ margin-bottom:3px; }
+  .edu-row{ font-size:10.5px; color:var(--ink-soft); line-height:1.6; margin-bottom:3px; }
+  .edu-row b{ color:var(--ink); }
+
   @media (prefers-reduced-motion: reduce){
-    .icon-circle, .ind-cta, .teaser{ transition:none !important; }
-    .icon-btn:hover .icon-circle, .ind-cta:hover, .teaser:hover{ transform:none !important; }
+    .ind-cta, .ind-cta-secondary, .teaser, .csv-download{ transition:none !important; }
+    .ind-cta:hover, .ind-cta-secondary:hover, .teaser:hover, .csv-download:hover{ transform:none !important; }
   }
 
   @media (max-width:400px){
@@ -131,7 +190,8 @@
 
     <div class="card-tabs">
       <button class="card-tab active" data-target="tab-profile">Profile</button>
-      <button class="card-tab" data-target="tab-pizza">Pizza Tracker</button>
+      <button class="card-tab" data-target="tab-resume">Resume</button>
+      <button class="card-tab" data-target="tab-pizza">Pizza Dashboard</button>
       <button class="card-tab" data-target="tab-winpct">Win&nbsp;%</button>
     </div>
 
@@ -145,18 +205,95 @@
       <div class="ind-body">
         <div class="teaser" onclick="switchTab('tab-pizza')">
           <div>
-            <div class="teaser-num js-pizza">729,473</div>
+            <div class="teaser-num js-pizza">209,582</div>
             <div class="teaser-text"><b>Pizzas Eaten</b> &middot; See the Breakdown</div>
           </div>
           <span class="teaser-arrow">&rarr;</span>
         </div>
-        <p class="qlabel">Quick Links</p>
-        <div class="icon-row">
-          <a class="icon-btn" href="Kevin-Valenzuela-Resume.pdf" target="_blank" rel="noopener"><span class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 2h7l5 5v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Z" stroke-linejoin="round"/><path d="M14 2v5h5" stroke-linejoin="round"/></svg></span><span class="icon-label">Resume</span></a>
-          <a class="icon-btn" href="https://smartcards.pro/21Ypvg" target="_blank" rel="noopener"><span class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><circle cx="8" cy="10.3" r="1.7"/><path d="M5.3 15.5c.4-1.5 1.6-2.3 2.7-2.3s2.3.8 2.7 2.3" stroke-linecap="round"/></svg></span><span class="icon-label">Contact</span></a>
-          <a class="icon-btn" href="https://www.instagram.com/_iamkevin95" target="_blank" rel="noopener"><span class="icon-circle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/></svg></span><span class="icon-label">Instagram</span></a>
-        </div>
         <a class="ind-cta" href="https://www.linkedin.com/in/kevin-valenzuela-96a562158" target="_blank" rel="noopener">Connect on LinkedIn</a>
+        <a class="ind-cta-secondary" href="https://smartcards.pro/21Ypvg" target="_blank" rel="noopener">Save My Contact Card</a>
+      </div>
+      <p class="footer">Built &amp; Broken by <a href="https://www.linkedin.com/in/kevin-valenzuela-96a562158" target="_blank" rel="noopener">Kevin Valenzuela</a></p>
+    </div>
+
+    <!-- RESUME TAB -->
+    <div id="tab-resume" hidden>
+      <div class="dash">
+        <div class="resume-header">
+          <p class="resume-name">Kevin Valenzuela</p>
+          <p class="resume-title">Data Analyst | Business Intelligence &middot; Pricing &middot; Product Data</p>
+          <p class="resume-meta">Ontario, CA &middot; <a href="https://www.linkedin.com/in/kevin-valenzuela-96a562158" target="_blank" rel="noopener">linkedin.com/in/kevin-valenzuela-96a562158</a></p>
+        </div>
+        <a class="resume-download" href="Kevin-Valenzuela-Resume.pdf" target="_blank" rel="noopener">Download Full Resume (PDF)</a>
+
+        <div class="resume-section">
+          <p class="chart-title">Professional Summary</p>
+          <p class="resume-summary">Data analyst with 10+ years in automotive aftermarket and enterprise technology, the last four years in data, pricing, and product analytics. I build and maintain the datasets, KPI dashboards, and pricing models that executive, VP, and director-level leaders rely on. I led catalog, pricing, and governance integration for two acquired brands, and maintain 120,000+ SKUs across catalog and ERP systems with accuracy across ACES, PIES, TecDoc, and NAPA.</p>
+        </div>
+
+        <div class="resume-section">
+          <p class="chart-title">Core Skills</p>
+          <div class="skill-row"><b>Analytics &amp; BI</b><span>SQL, Snowflake, Power BI, Tableau, Excel, Power Automate, Claude &amp; Copilot dashboards, agents, and workflows</span></div>
+          <div class="skill-row"><b>Data Platforms</b><span>Snowflake, Fivetran, Epicor (PIM, DAM, TP Web), NetSuite, HubSpot, JNP</span></div>
+          <div class="skill-row"><b>Product &amp; Catalog</b><span>ACES, PIES, TecDoc, NAPA, catalog management, VIO &amp; gap analysis, MAP &amp; price-level management</span></div>
+          <div class="skill-row"><b>Strategy &amp; Process</b><span>Data governance, project management, market research &amp; benchmarking, SOPs, UAT, training</span></div>
+        </div>
+
+        <div class="resume-section">
+          <p class="chart-title">Professional Experience</p>
+
+          <div class="job-block">
+            <div class="job-company-row"><span class="job-company">Advanced Innovative Technology Corp. (TrakMotive)</span><span class="job-dates">2022 &ndash; Present</span></div>
+            <p class="job-location">Redlands, CA</p>
+            <div class="job-role-row"><span class="job-role">Data Analyst, Business Intelligence &amp; Analytics</span><span class="job-role-dates">2026 &ndash; Present</span></div>
+            <div class="job-role-row"><span class="job-role">Data Analyst, Product</span><span class="job-role-dates">2025</span></div>
+            <div class="job-role-row"><span class="job-role">Data Support Specialist, Product</span><span class="job-role-dates">2022 &ndash; 2025</span></div>
+            <ul class="job-bullets">
+              <li>Administer Snowflake, Fivetran, Epicor PIM/DAM, NetSuite, and HubSpot, owning data reliability, standards, and integrity.</li>
+              <li>Build recurring reports and KPI dashboards for the VP of Operations; deliver analysis for the VP of Sales.</li>
+              <li>Maintain vendor cost, customer price levels, and item and packaging data, keeping reporting accurate across brands.</li>
+              <li>Led catalog and pricing integration for 2 acquired brands: catalog audits, pricing logic, and data-structure alignment.</li>
+              <li>Support pricing across 60+ customer price levels and 3 core brands, regularly delivering RFQ, FOG, and MAP files.</li>
+              <li>Built interchange and cross-reference lookup tools used company-wide, cutting lookup time from hours to seconds.</li>
+              <li>Run line reviews, VIO research, gap analysis, and competitive benchmarking across 120,000+ SKUs.</li>
+              <li>Manage ACES, PIES, TecDoc, NAPA, and regional catalogs across the full lifecycle, from new-part onboarding to obsolescence.</li>
+              <li>Wrote governance rules, workflow docs, and SOPs; trained cross-functional teams to reduce recurring data errors.</li>
+            </ul>
+          </div>
+
+          <div class="job-block">
+            <div class="job-company-row"><span class="job-company">NCR Corporation</span><span class="job-dates">2015 &ndash; 2022</span></div>
+            <p class="job-location">Remote</p>
+            <div class="job-role-row"><span class="job-role">Business Operations Analyst <span style="color:#8f8370;font-weight:400;">(formerly Managed Services Implementation Specialist II)</span></span><span class="job-role-dates">2019 &ndash; 2022</span></div>
+            <div class="job-role-row"><span class="job-role">Customer Engineer II</span><span class="job-role-dates">2017 &ndash; 2019</span></div>
+            <div class="job-role-row"><span class="job-role">Customer Engineer I</span><span class="job-role-dates">2016 &ndash; 2017</span></div>
+            <div class="job-role-row"><span class="job-role">Field Maintenance Technician <span style="color:#8f8370;font-weight:400;">(NCR contractor via Computech Corp.)</span></span><span class="job-role-dates">2015 &ndash; 2016</span></div>
+            <ul class="job-bullets">
+              <li>Led end-to-end SaaS onboarding for enterprise clients: installation, configuration, UAT support, and end-user training.</li>
+              <li>Coordinated regional and national rollouts, scheduling fleet-wide implementations and travel for self and team.</li>
+              <li>Wrote project- and account-specific installation guides and technical documentation for internal teams and customers.</li>
+              <li>Managed remote deployments, incidents, and SLAs; repaired ATMs, POS, self-checkouts, and network hardware.</li>
+              <li>Lead technician and mentor, training new engineers on deployment procedures and multi-vendor equipment.</li>
+            </ul>
+          </div>
+
+          <div class="job-block">
+            <div class="job-company-row"><span class="job-company">Earlier Experience</span></div>
+            <div class="job-role-row"><span class="job-role">General Service Technician &mdash; Pep Boys, Chino, CA</span><span class="job-role-dates">2014 &ndash; 2015</span></div>
+            <div class="job-role-row"><span class="job-role">AutoZoner / Commercial Driver &mdash; AutoZone, Rancho Cucamonga &amp; Ontario, CA</span><span class="job-role-dates">2013&ndash;14; 2019&ndash;20</span></div>
+            <ul class="job-bullets">
+              <li>Built the parts and vehicle foundation behind today's catalog work: multi-point inspections, diagnostics, and service writing with Mitchell 1 and ALLDATA, plus commercial parts sales, inventory, and delivery.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="resume-section" style="margin-bottom:6px;">
+          <p class="chart-title">Education &amp; Training</p>
+          <p class="edu-row"><b>NCR University</b> &mdash; 138+ multi-vendor courses and certifications in hardware, software, networking, and enterprise systems</p>
+          <p class="edu-row"><b>LinkedIn Learning</b> &mdash; Data analytics, ITIL 4 Foundation, networking fundamentals, Wireshark</p>
+          <p class="edu-row"><b>Chaffey College</b> &mdash; Automotive Technology certificates</p>
+        </div>
+
       </div>
       <p class="footer">Built &amp; Broken by <a href="https://www.linkedin.com/in/kevin-valenzuela-96a562158" target="_blank" rel="noopener">Kevin Valenzuela</a></p>
     </div>
@@ -172,80 +309,50 @@
           </div>
         </div>
 
-        <p class="gov-note"><strong>Note:</strong> The counter on the Profile tab backdates formal tracking. Cannot be verified... just feels right.</p>
+        <div class="slicer-block">
+          <div class="slicer-field" style="flex:1 1 150px;">
+            <label class="slicer-label">Year Range</label>
+            <div class="range-pair">
+              <select class="slicer-select" id="year-from"></select>
+              <select class="slicer-select" id="year-to"></select>
+            </div>
+          </div>
+          <div class="slicer-field">
+            <label class="slicer-label" for="type-select">Pizza Type</label>
+            <select class="slicer-select" id="type-select"></select>
+          </div>
+          <div class="slicer-field">
+            <label class="slicer-label" for="brand-select">Pizza Brand</label>
+            <select class="slicer-select" id="brand-select"></select>
+          </div>
+        </div>
 
         <div class="kpi-row cols-3">
-          <div class="kpi-card">
-            <div class="kpi-num">310</div>
-            <span class="kpi-label">Total Pizzas</span>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-num">6</div>
-            <span class="kpi-label">Years Tracked</span>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-num">52</div>
-            <span class="kpi-label">Avg / Year</span>
-          </div>
+          <div class="kpi-card"><div class="kpi-num" id="kpi-total">209,582</div><span class="kpi-label" id="kpi-total-label">Total Pizzas</span></div>
+          <div class="kpi-card"><div class="kpi-num" id="kpi-orders">123,284</div><span class="kpi-label">Total Orders</span></div>
+          <div class="kpi-card"><div class="kpi-num" id="kpi-qty">1.7</div><span class="kpi-label">Avg Qty / Order</span></div>
+        </div>
+        <div class="kpi-row cols-3">
+          <div class="kpi-card"><div class="kpi-num" id="kpi-years">6</div><span class="kpi-label" id="kpi-years-label">Years in Range</span></div>
+          <div class="kpi-card"><div class="kpi-num" id="kpi-spend">$2,692,165</div><span class="kpi-label">Total Spend</span></div>
+          <div class="kpi-card"><div class="kpi-num" id="kpi-price">$12.85</div><span class="kpi-label">Avg Price / Pizza</span></div>
         </div>
 
         <div class="chart-block">
-          <p class="chart-title">Pizzas by Year</p>
-          <svg class="chart-svg" viewBox="0 0 380 140" role="img" aria-label="Line chart of pizzas eaten per year: 2021 thirty eight, 2022 forty five, 2023 fifty two, 2024 sixty one, 2025 seventy three, 2026 year to date forty one">
-            <line x1="0" y1="112" x2="380" y2="112" stroke="#2a2a2a" stroke-width="1"/>
-            <line x1="0" y1="72" x2="380" y2="72" stroke="#232323" stroke-width="1" stroke-dasharray="2 4"/>
-            <line x1="0" y1="32" x2="380" y2="32" stroke="#232323" stroke-width="1" stroke-dasharray="2 4"/>
-
-            <polygon points="0,106 76,91 152,76 228,58 304,32 380,99 380,112 0,112" fill="var(--acc)" opacity="0.14"/>
-            <polyline points="0,106 76,91 152,76 228,58 304,32 380,99" fill="none" stroke="var(--acc-soft)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-
-            <circle cx="0" cy="106" r="3.5" fill="var(--acc-soft)"/>
-            <circle cx="76" cy="91" r="3.5" fill="var(--acc-soft)"/>
-            <circle cx="152" cy="76" r="3.5" fill="var(--acc-soft)"/>
-            <circle cx="228" cy="58" r="3.5" fill="var(--acc-soft)"/>
-            <circle cx="304" cy="32" r="4.5" fill="var(--acc-soft)"/>
-            <circle cx="380" cy="99" r="3.5" fill="#8a8a8a"/>
-
-            <text x="0" y="122" font-size="9" fill="#6b6b6b" font-family="Inter, sans-serif">2021</text>
-            <text x="76" y="122" text-anchor="middle" font-size="9" fill="#6b6b6b" font-family="Inter, sans-serif">2022</text>
-            <text x="152" y="122" text-anchor="middle" font-size="9" fill="#6b6b6b" font-family="Inter, sans-serif">2023</text>
-            <text x="228" y="122" text-anchor="middle" font-size="9" fill="#6b6b6b" font-family="Inter, sans-serif">2024</text>
-            <text x="304" y="122" text-anchor="middle" font-size="9" fill="#6b6b6b" font-family="Inter, sans-serif">2025</text>
-            <text x="380" y="122" text-anchor="end" font-size="9" fill="#6b6b6b" font-family="Inter, sans-serif">2026</text>
-
-            <text x="0" y="98" font-size="9.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">38</text>
-            <text x="76" y="83" text-anchor="middle" font-size="9.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">45</text>
-            <text x="152" y="68" text-anchor="middle" font-size="9.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">52</text>
-            <text x="228" y="50" text-anchor="middle" font-size="9.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">61</text>
-            <text x="304" y="24" text-anchor="middle" font-size="10.5" font-weight="700" fill="#f0d9ab" font-family="Oswald, Inter, sans-serif">73</text>
-            <text x="380" y="91" text-anchor="end" font-size="9.5" font-weight="700" fill="#8a8a8a" font-family="Oswald, Inter, sans-serif">41</text>
-          </svg>
+          <div class="chart-title-row">
+            <p class="chart-title" id="year-chart-title">Pizzas by Year</p>
+            <button class="drill-back" id="drill-back-btn" style="display:none;">&larr; All Years</button>
+          </div>
+          <svg class="chart-svg" id="chart-year" viewBox="0 0 380 140" role="img" aria-label="Line chart of pizzas eaten per year within the selected range; tap a year to drill into its months"></svg>
+          <p class="drill-hint" id="drill-hint">Tap a point to drill into that year's months.</p>
         </div>
 
         <div class="chart-block">
-          <p class="chart-title">Pizza Types</p>
-          <svg class="chart-svg" viewBox="0 0 380 170" role="img" aria-label="Bar chart of pizza types eaten: pepperoni and jalapeno one hundred four, winner; pepperoni sixty eight; hawaiian fifty one; supreme forty six; other forty one">
-            <text x="0" y="12" font-size="10.5" font-weight="700" fill="#f0d9ab" font-family="Inter, sans-serif">Pepperoni &amp; Jalape&ntilde;o &#9733;</text>
-            <rect x="0" y="18" width="300" height="12" rx="6" fill="var(--acc)"/>
-            <text x="308" y="28" font-size="10.5" font-weight="700" fill="#f0d9ab" font-family="Oswald, Inter, sans-serif">104</text>
-
-            <text x="0" y="46" font-size="10.5" font-weight="600" fill="#d8d8d8" font-family="Inter, sans-serif">Pepperoni</text>
-            <rect x="0" y="52" width="196" height="12" rx="6" fill="var(--acc)" opacity="0.78"/>
-            <text x="204" y="62" font-size="10.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">68</text>
-
-            <text x="0" y="80" font-size="10.5" font-weight="600" fill="#d8d8d8" font-family="Inter, sans-serif">Hawaiian</text>
-            <rect x="0" y="86" width="147" height="12" rx="6" fill="var(--acc)" opacity="0.6"/>
-            <text x="155" y="96" font-size="10.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">51</text>
-
-            <text x="0" y="114" font-size="10.5" font-weight="600" fill="#d8d8d8" font-family="Inter, sans-serif">Supreme</text>
-            <rect x="0" y="120" width="133" height="12" rx="6" fill="var(--acc)" opacity="0.5"/>
-            <text x="141" y="130" font-size="10.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">46</text>
-
-            <text x="0" y="148" font-size="10.5" font-weight="600" fill="#d8d8d8" font-family="Inter, sans-serif">Other</text>
-            <rect x="0" y="154" width="118" height="12" rx="6" fill="var(--acc)" opacity="0.4"/>
-            <text x="126" y="164" font-size="10.5" font-weight="700" fill="#c9c9c9" font-family="Oswald, Inter, sans-serif">41</text>
-          </svg>
+          <p class="chart-title">Type of Pizza by Brand</p>
+          <div class="matrix-wrap"><table class="matrix-table" id="matrix-table"></table></div>
         </div>
+
+        <button class="csv-download" id="csv-download-btn">&#8681; Download Sample Dataset</button>
 
       </div>
       <p class="footer">Built &amp; Broken by <a href="https://www.linkedin.com/in/kevin-valenzuela-96a562158" target="_blank" rel="noopener">Kevin Valenzuela</a></p>
@@ -275,17 +382,17 @@
           </div>
 
           <svg class="chart-svg" viewBox="0 0 380 112" role="img" aria-label="Bar chart: 214 times wrong, 189 times right but apologized anyway, 12 times actually won">
-            <text x="0" y="14" font-size="11" font-weight="600" fill="#d8d8d8" font-family="Inter, sans-serif">Wrong</text>
+            <text x="0" y="14" font-size="11" font-weight="600" fill="var(--ink)" font-family="Inter, sans-serif">Wrong</text>
             <rect x="0" y="20" width="315" height="14" rx="7" fill="var(--acc)"/>
-            <text x="323" y="31" font-size="11" font-weight="700" fill="#f0d9ab" font-family="Oswald, Inter, sans-serif">214</text>
+            <text x="323" y="31" font-size="11" font-weight="700" fill="var(--ink)" font-family="Oswald, Inter, sans-serif">214</text>
 
-            <text x="0" y="52" font-size="11" font-weight="600" fill="#d8d8d8" font-family="Inter, sans-serif">Right, but Apologized Anyway</text>
+            <text x="0" y="52" font-size="11" font-weight="600" fill="var(--ink)" font-family="Inter, sans-serif">Right, but Apologized Anyway</text>
             <rect x="0" y="58" width="278" height="14" rx="7" fill="var(--acc)" opacity="0.6"/>
-            <text x="286" y="69" font-size="11" font-weight="700" fill="#f0d9ab" font-family="Oswald, Inter, sans-serif">189</text>
+            <text x="286" y="69" font-size="11" font-weight="700" fill="var(--ink)" font-family="Oswald, Inter, sans-serif">189</text>
 
-            <text x="0" y="90" font-size="11" font-weight="600" fill="#d8d8d8" font-family="Inter, sans-serif">Right, Actually Won</text>
+            <text x="0" y="90" font-size="11" font-weight="600" fill="var(--ink)" font-family="Inter, sans-serif">Right, Actually Won</text>
             <rect x="0" y="96" width="18" height="14" rx="7" fill="var(--acc-soft)"/>
-            <text x="26" y="107" font-size="11" font-weight="700" fill="#f0d9ab" font-family="Oswald, Inter, sans-serif">12</text>
+            <text x="26" y="107" font-size="11" font-weight="700" fill="var(--ink)" font-family="Oswald, Inter, sans-serif">12</text>
           </svg>
         </div>
 
@@ -331,7 +438,7 @@
 </div>
 
 <script>
-  var tabIds = ['tab-profile', 'tab-pizza', 'tab-winpct'];
+  var tabIds = ['tab-profile', 'tab-resume', 'tab-pizza', 'tab-winpct'];
   function switchTab(id){
     document.querySelectorAll('.card-tab').forEach(function(b){
       b.classList.toggle('active', b.dataset.target === id);
@@ -342,7 +449,7 @@
     btn.addEventListener('click', function(){ switchTab(btn.dataset.target); });
   });
   (function(){
-    var base = 729473;
+    var base = 209582;
     var bumps = 0;
     function render(){
       bumps += 1;
@@ -351,6 +458,351 @@
     }
     setTimeout(render, 3000);
     setTimeout(render, 3 * 60 * 1000);
+  })();
+
+  /* ============ PIZZA TRACKER: relational slicers, drill-down, PO/SO economics ============ */
+  (function(){
+    var YEARS = [2021,2022,2023,2024,2025,2026];
+    var YEARLY_TOTAL = {2021:25710, 2022:30498, 2023:35127, 2024:41261, 2025:49332, 2026:27654};
+
+    var TYPE_NAMES  = ["Pepperoni & Jalapeño","Pepperoni","Hawaiian","Supreme","Other"];
+    var BRAND_NAMES = ["Little Caesars","Domino's","Pizza Hut","Pizza Pirates","Other"];
+
+    // Per-pizza price by brand, by year -- prices climb with real menu inflation instead of
+    // staying flat. Little Caesars starts at the classic $5 Hot-N-Ready and creeps toward $6.60.
+    // Used to derive spend, same as a unit price on a PO/SO line item that changes over time.
+    var BRAND_PRICE_BY_YEAR = {
+      2021: { "Little Caesars":5.00, "Domino's":11.00, "Pizza Hut":11.50, "Pizza Pirates":14.00, "Other":11.00 },
+      2022: { "Little Caesars":5.40, "Domino's":11.90, "Pizza Hut":12.40, "Pizza Pirates":15.10, "Other":11.90 },
+      2023: { "Little Caesars":5.75, "Domino's":12.65, "Pizza Hut":13.25, "Pizza Pirates":16.10, "Other":12.65 },
+      2024: { "Little Caesars":6.00, "Domino's":13.20, "Pizza Hut":13.80, "Pizza Pirates":16.80, "Other":13.20 },
+      2025: { "Little Caesars":6.30, "Domino's":13.85, "Pizza Hut":14.50, "Pizza Pirates":17.65, "Other":13.85 },
+      2026: { "Little Caesars":6.60, "Domino's":14.50, "Pizza Hut":15.20, "Pizza Pirates":18.50, "Other":14.50 }
+    };
+
+    // Average pizzas per order (a single order can be qty 1 or a family order of 3-4).
+    var AVG_QTY_PER_ORDER = 1.7;
+
+    // Which Type/Brand combinations can actually happen at all (0 = never ordered that
+    // combo -- e.g. Little Caesars' limited menu doesn't really do a jalapeno specialty
+    // or Hawaiian). This is what makes some matrix cells genuinely zero, not just small.
+    var AVAILABILITY = {
+      "Pepperoni & Jalapeño": {"Little Caesars":0, "Domino's":1, "Pizza Hut":1, "Pizza Pirates":1, "Other":1},
+      "Pepperoni":                 {"Little Caesars":1, "Domino's":1, "Pizza Hut":1, "Pizza Pirates":1, "Other":1},
+      "Hawaiian":                  {"Little Caesars":0, "Domino's":1, "Pizza Hut":1, "Pizza Pirates":1, "Other":1},
+      "Supreme":                   {"Little Caesars":1, "Domino's":1, "Pizza Hut":1, "Pizza Pirates":1, "Other":1},
+      "Other":                     {"Little Caesars":1, "Domino's":1, "Pizza Hut":1, "Pizza Pirates":1, "Other":1}
+    };
+
+    // Each year's mix sums to 1.0, in the order of TYPE_NAMES / BRAND_NAMES.
+    // These shift year to year on purpose -- e.g. 2021 leaned Hawaiian, later years shifted to Pepperoni & Jalapeno.
+    var TYPE_SHARES_BY_YEAR = {
+      2021: [.20,.24,.28,.16,.12],
+      2022: [.31,.19,.24,.14,.12],
+      2023: [.27,.25,.17,.19,.12],
+      2024: [.39,.16,.19,.15,.11],
+      2025: [.34,.22,.11,.23,.10],
+      2026: [.42,.14,.16,.18,.10]
+    };
+    var BRAND_SHARES_BY_YEAR = {
+      2021: [.20,.29,.31,.10,.10],
+      2022: [.26,.22,.27,.15,.10],
+      2023: [.24,.27,.18,.21,.10],
+      2024: [.34,.17,.21,.18,.10],
+      2025: [.29,.21,.11,.29,.10],
+      2026: [.33,.16,.15,.26,.10]
+    };
+
+    var MONTH_NAMES = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    var MONTH_SHAPE = [.11,.07,.06,.05,.05,.06,.07,.07,.07,.08,.12,.19];
+
+    var state = { from: 2021, to: 2026, type: 'all', brand: 'all', drillYear: null };
+
+    function distribute(total, weights){
+      var raw = weights.map(function(w){ return Math.round(total * w); });
+      var sum = raw.reduce(function(a,b){ return a+b; }, 0);
+      var diff = total - sum;
+      var maxIdx = raw.indexOf(Math.max.apply(null, raw));
+      raw[maxIdx] += diff;
+      return raw;
+    }
+
+    function yearsInRange(){
+      return YEARS.filter(function(y){ return y >= state.from && y <= state.to; });
+    }
+
+    // 5x5 joint matrix (type rows x brand cols) for one year: independence assumption
+    // within the year, masked by real menu availability, renormalized back to that
+    // year's total so masked-out cells' share gets redistributed to what IS available.
+    function matrixForYear(y){
+      var tShares = TYPE_SHARES_BY_YEAR[y];
+      var bShares = BRAND_SHARES_BY_YEAR[y];
+      var raw = TYPE_NAMES.map(function(t, i){
+        return BRAND_NAMES.map(function(b, j){
+          return tShares[i] * bShares[j] * AVAILABILITY[t][b];
+        });
+      });
+      var sumRaw = raw.reduce(function(s,row){ return s + row.reduce(function(a,b){return a+b;},0); }, 0);
+      var yTotal = YEARLY_TOTAL[y];
+      var scaled = raw.map(function(row){ return row.map(function(v){ return (v/sumRaw) * yTotal; }); });
+
+      var flat = [];
+      scaled.forEach(function(row){ row.forEach(function(v){ flat.push(Math.round(v)); }); });
+      var diff = yTotal - flat.reduce(function(a,b){ return a+b; }, 0);
+      var maxIdx = flat.indexOf(Math.max.apply(null, flat));
+      flat[maxIdx] += diff;
+
+      var m = [];
+      for(var i=0;i<TYPE_NAMES.length;i++){ m.push(flat.slice(i*BRAND_NAMES.length, (i+1)*BRAND_NAMES.length)); }
+      return m;
+    }
+
+    function matrixForYears(yearsList){
+      var m = TYPE_NAMES.map(function(){ return BRAND_NAMES.map(function(){ return 0; }); });
+      yearsList.forEach(function(y){
+        var ym = matrixForYear(y);
+        ym.forEach(function(row, i){ row.forEach(function(v, j){ m[i][j] += v; }); });
+      });
+      return m;
+    }
+
+    // The number that respects BOTH the type and brand slicer, for one year --
+    // this is what makes the slicers relational instead of decorative.
+    function filteredYearValue(y){
+      var m = matrixForYear(y);
+      var ti = state.type === 'all' ? -1 : TYPE_NAMES.indexOf(state.type);
+      var bi = state.brand === 'all' ? -1 : BRAND_NAMES.indexOf(state.brand);
+      if(ti >= 0 && bi >= 0) return m[ti][bi];
+      if(ti >= 0) return m[ti].reduce(function(a,b){ return a+b; }, 0);
+      if(bi >= 0) return m.reduce(function(s,row){ return s + row[bi]; }, 0);
+      return YEARLY_TOTAL[y];
+    }
+
+    var selectsBuilt = false;
+    function buildSelectsOnce(){
+      if(selectsBuilt) return;
+      selectsBuilt = true;
+
+      var fromSel = document.getElementById('year-from');
+      var toSel = document.getElementById('year-to');
+      YEARS.forEach(function(y){
+        var o1 = document.createElement('option'); o1.value = y; o1.textContent = y; fromSel.appendChild(o1);
+        var o2 = document.createElement('option'); o2.value = y; o2.textContent = y; toSel.appendChild(o2);
+      });
+      fromSel.value = state.from; toSel.value = state.to;
+      fromSel.addEventListener('change', function(){
+        state.from = Number(fromSel.value);
+        if(state.from > state.to){ state.to = state.from; toSel.value = state.to; }
+        if(state.drillYear !== null && (state.drillYear < state.from || state.drillYear > state.to)) state.drillYear = null;
+        renderAll();
+      });
+      toSel.addEventListener('change', function(){
+        state.to = Number(toSel.value);
+        if(state.to < state.from){ state.from = state.to; fromSel.value = state.from; }
+        if(state.drillYear !== null && (state.drillYear < state.from || state.drillYear > state.to)) state.drillYear = null;
+        renderAll();
+      });
+
+      document.getElementById('drill-back-btn').addEventListener('click', function(){
+        state.drillYear = null;
+        renderAll();
+      });
+
+      document.getElementById('chart-year').addEventListener('click', function(e){
+        var g = e.target.closest('[data-drill-year]');
+        if(g && state.drillYear === null){
+          state.drillYear = Number(g.getAttribute('data-drill-year'));
+          renderAll();
+        }
+      });
+
+      var typeSel = document.getElementById('type-select');
+      [{key:'all', label:'All Types'}].concat(TYPE_NAMES.map(function(n){ return {key:n, label:n}; }))
+        .forEach(function(item){ var o=document.createElement('option'); o.value=item.key; o.textContent=item.label; typeSel.appendChild(o); });
+      typeSel.addEventListener('change', function(){ state.type = typeSel.value; renderAll(); });
+
+      var brandSel = document.getElementById('brand-select');
+      [{key:'all', label:'All Brands'}].concat(BRAND_NAMES.map(function(n){ return {key:n, label:n}; }))
+        .forEach(function(item){ var o=document.createElement('option'); o.value=item.key; o.textContent=item.label; brandSel.appendChild(o); });
+      brandSel.addEventListener('change', function(){ state.brand = brandSel.value; renderAll(); });
+
+      document.getElementById('csv-download-btn').addEventListener('click', downloadCSV);
+    }
+
+    // Exports the exact Year x Type x Brand detail the charts are computed from --
+    // same functions (matrixForYear, BRAND_PRICE_BY_YEAR) as the rendered visuals,
+    // so the download can never drift out of sync with what's on screen.
+    function downloadCSV(){
+      var rows = [['Year','Type','Brand','Quantity','Unit Price','Total Price']];
+      YEARS.forEach(function(y){
+        var m = matrixForYear(y);
+        TYPE_NAMES.forEach(function(t, i){
+          BRAND_NAMES.forEach(function(b, j){
+            var qty = m[i][j];
+            var price = BRAND_PRICE_BY_YEAR[y][b];
+            var total = Math.round(qty * price * 100) / 100;
+            rows.push([y, t, b, qty, price.toFixed(2), total.toFixed(2)]);
+          });
+        });
+      });
+      var csv = rows.map(function(row){
+        return row.map(function(cell){
+          var s = String(cell);
+          return /[",\n]/.test(s) ? ('"' + s.replace(/"/g,'""') + '"') : s;
+        }).join(',');
+      }).join('\r\n');
+
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'kevin-pizza-sample-dataset.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function renderKpis(){
+      var years = yearsInRange();
+      var total = years.reduce(function(s,y){ return s + filteredYearValue(y); }, 0);
+
+      var ti = state.type === 'all' ? -1 : TYPE_NAMES.indexOf(state.type);
+      var bi = state.brand === 'all' ? -1 : BRAND_NAMES.indexOf(state.brand);
+      var spendFiltered = 0;
+      years.forEach(function(y){
+        var m = matrixForYear(y);
+        TYPE_NAMES.forEach(function(t, i){
+          if(ti >= 0 && i !== ti) return;
+          BRAND_NAMES.forEach(function(b, j){
+            if(bi >= 0 && j !== bi) return;
+            spendFiltered += m[i][j] * BRAND_PRICE_BY_YEAR[y][b];
+          });
+        });
+      });
+
+      var filters = [];
+      if(state.type !== 'all') filters.push(state.type.split(' ')[0]);
+      if(state.brand !== 'all') filters.push(state.brand);
+      var suffix = filters.length ? (' (' + filters.join(', ') + ')') : '';
+
+      document.getElementById('kpi-total').textContent = Math.round(total).toLocaleString('en-US');
+      document.getElementById('kpi-total-label').textContent = 'Total Pizzas' + suffix;
+      document.getElementById('kpi-orders').textContent = Math.round(total / AVG_QTY_PER_ORDER).toLocaleString('en-US');
+      document.getElementById('kpi-qty').textContent = AVG_QTY_PER_ORDER.toFixed(1);
+      document.getElementById('kpi-years').textContent = String(years.length);
+      document.getElementById('kpi-years-label').textContent = (years.length === 6) ? 'Years Tracked' : 'Years in Range';
+      document.getElementById('kpi-spend').textContent = '$' + Math.round(spendFiltered).toLocaleString('en-US');
+      document.getElementById('kpi-price').textContent = total ? ('$' + (spendFiltered/total).toFixed(2)) : '$0.00';
+    }
+
+    function renderYearChart(){
+      var svg = document.getElementById('chart-year');
+      var titleEl = document.getElementById('year-chart-title');
+      var backBtn = document.getElementById('drill-back-btn');
+      var hintEl = document.getElementById('drill-hint');
+
+      if(state.drillYear !== null){
+        titleEl.textContent = 'Pizzas by Month — ' + state.drillYear;
+        backBtn.style.display = '';
+        hintEl.textContent = '';
+
+        var total = filteredYearValue(state.drillYear);
+        var monthly = distribute(Math.round(total), MONTH_SHAPE);
+        var max = Math.max.apply(null, monthly);
+        var colW = 380/12, barMaxH = 84;
+        var html = '<line x1="0" y1="112" x2="380" y2="112" stroke="var(--border)" stroke-width="1"/>';
+        monthly.forEach(function(v, i){
+          var h = max ? (v/max)*barMaxH : 0;
+          var x = i*colW + colW*0.18, w = colW*0.64, y = 112 - h;
+          html += '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="3" fill="var(--acc)"/>';
+          html += '<text x="'+(x+w/2).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" font-size="7.5" font-weight="700" fill="var(--ink)" font-family="Oswald, Inter, sans-serif">'+v.toLocaleString('en-US')+'</text>';
+          html += '<text x="'+(x+w/2).toFixed(1)+'" y="124" text-anchor="middle" font-size="8" fill="var(--muted)" font-family="Inter, sans-serif">'+MONTH_NAMES[i]+'</text>';
+        });
+        svg.innerHTML = html;
+        return;
+      }
+
+      titleEl.textContent = 'Pizzas by Year';
+      backBtn.style.display = 'none';
+      hintEl.textContent = "Tap a point to drill into that year's months.";
+
+      var rangeYears = yearsInRange();
+      var values = rangeYears.map(function(y){ return filteredYearValue(y); });
+      var max = Math.max.apply(null, values) || 1;
+      var n = rangeYears.length;
+      var xs = rangeYears.map(function(y, i){ return n > 1 ? i * (380/(n-1)) : 190; });
+      var ys = values.map(function(v){ return 112 - (v/max) * 84; });
+      var pts = xs.map(function(x,i){ return x.toFixed(1)+','+ys[i].toFixed(1); }).join(' ');
+      var areaPts = n > 1 ? (pts + ' '+xs[n-1].toFixed(1)+',112 '+xs[0].toFixed(1)+',112') : '';
+
+      var html = '<line x1="0" y1="112" x2="380" y2="112" stroke="var(--border)" stroke-width="1"/>';
+      html += '<line x1="0" y1="72" x2="380" y2="72" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 4"/>';
+      html += '<line x1="0" y1="32" x2="380" y2="32" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 4"/>';
+      if(n > 1){
+        html += '<polygon points="'+areaPts+'" fill="var(--acc)" opacity="0.14"/>';
+        html += '<polyline points="'+pts+'" fill="none" stroke="var(--acc-soft)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+      }
+      rangeYears.forEach(function(y, i){
+        var anchor = n === 1 ? 'middle' : (i===0 ? 'start' : (i===n-1 ? 'end' : 'middle'));
+        html += '<g style="cursor:pointer" data-drill-year="'+y+'">';
+        html += '<circle cx="'+xs[i].toFixed(1)+'" cy="'+ys[i].toFixed(1)+'" r="9" fill="transparent"/>';
+        html += '<circle cx="'+xs[i].toFixed(1)+'" cy="'+ys[i].toFixed(1)+'" r="4.5" fill="var(--acc-soft)"/>';
+        html += '<text x="'+xs[i].toFixed(1)+'" y="'+(ys[i]-10).toFixed(1)+'" text-anchor="'+anchor+'" font-size="10.5" font-weight="700" fill="var(--ink)" font-family="Oswald, Inter, sans-serif">'+Math.round(values[i]).toLocaleString('en-US')+'</text>';
+        html += '<text x="'+xs[i].toFixed(1)+'" y="126" text-anchor="'+anchor+'" font-size="9.5" fill="var(--muted)" font-family="Inter, sans-serif">'+y+'</text>';
+        html += '</g>';
+      });
+      svg.innerHTML = html;
+    }
+
+    function renderMatrix(){
+      var m = matrixForYears(yearsInRange());
+      var rowTotals = m.map(function(row){ return row.reduce(function(a,b){ return a+b; }, 0); });
+      var colTotals = BRAND_NAMES.map(function(_, j){ return m.reduce(function(sum,row){ return sum+row[j]; }, 0); });
+      var grand = rowTotals.reduce(function(a,b){ return a+b; }, 0);
+      var maxCell = Math.max.apply(null, m.map(function(r){ return Math.max.apply(null, r); }));
+      var winnerType = rowTotals.indexOf(Math.max.apply(null, rowTotals));
+      var winnerBrand = colTotals.indexOf(Math.max.apply(null, colTotals));
+
+      var html = '<thead><tr><th></th>';
+      BRAND_NAMES.forEach(function(b, j){
+        var hl = (state.brand === b) ? ' matrix-hl' : '';
+        var win = (j === winnerBrand) ? ' matrix-winner' : '';
+        html += '<th class="'+win.trim()+hl+'">'+b+'</th>';
+      });
+      html += '<th>Total</th></tr></thead><tbody>';
+
+      TYPE_NAMES.forEach(function(t, i){
+        var rowHl = (state.type === t) ? ' matrix-hl' : '';
+        var rowWin = (i === winnerType) ? ' matrix-winner' : '';
+        html += '<tr><td class="row-head'+rowWin+rowHl+'">'+t+'</td>';
+        BRAND_NAMES.forEach(function(b, j){
+          var v = m[i][j];
+          var op = maxCell ? (0.06 + 0.34*(v/maxCell)) : 0.06;
+          var cellHl = (state.type === t || state.brand === b) ? ' matrix-hl' : '';
+          html += '<td class="'+cellHl.trim()+'" style="background-color:rgba(111,143,90,'+op.toFixed(2)+')">'+Math.round(v).toLocaleString('en-US')+'</td>';
+        });
+        html += '<td class="row-head'+rowWin+'">'+Math.round(rowTotals[i]).toLocaleString('en-US')+'</td></tr>';
+      });
+
+      html += '<tfoot><tr><th>Total</th>';
+      colTotals.forEach(function(v, j){
+        var win = (j === winnerBrand) ? ' matrix-winner' : '';
+        html += '<td class="'+win.trim()+'">'+Math.round(v).toLocaleString('en-US')+'</td>';
+      });
+      html += '<td class="matrix-winner">'+Math.round(grand).toLocaleString('en-US')+'</td></tr></tfoot>';
+
+      document.getElementById('matrix-table').innerHTML = html;
+    }
+
+    function renderAll(){
+      buildSelectsOnce();
+      renderKpis();
+      renderYearChart();
+      renderMatrix();
+    }
+
+    if(document.getElementById('chart-year')){ renderAll(); }
   })();
 </script>
 
