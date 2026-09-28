@@ -17,24 +17,18 @@
     --border:#c9b896; --border-strong:#b09e78;
   }
   *{ box-sizing:border-box; }
-  html{ background:#4f3d29; }
+  html{ background:var(--surface); }
   body{
     margin:0;
     min-height:100vh;
-    background:
-      radial-gradient(600px 340px at 12% -8%, rgba(180,150,100,0.30), transparent 60%),
-      radial-gradient(500px 300px at 100% 6%, rgba(150,120,80,0.25), transparent 55%),
-      #4f3d29;
+    background:var(--surface);
     color:var(--ink);
     font-family: Inter, -apple-system, "Segoe UI", sans-serif;
-    display:flex;
-    justify-content:center;
-    padding: 40px 16px 64px;
   }
 
-  .page{ width:100%; max-width:460px; }
+  .page{ width:100%; max-width:600px; margin:0 auto; }
 
-  .ind-card{ background:var(--surface); border-radius:18px; overflow:hidden; box-shadow:0 20px 50px rgba(60,50,30,.14); }
+  .ind-card{ background:var(--surface); min-height:100vh; }
 
   /* in-card tab switcher */
   .card-tabs{ display:flex; background:var(--surface-3); }
@@ -337,6 +331,7 @@
           <div class="kpi-card"><div class="kpi-num" id="kpi-spend">$2,692,165</div><span class="kpi-label">Total Spend</span></div>
           <div class="kpi-card"><div class="kpi-num" id="kpi-price">$12.85</div><span class="kpi-label">Avg Price / Pizza</span></div>
         </div>
+        <p class="drill-hint" style="margin-top:-14px;">Fine print: a "pizza" here is any order I opened &mdash; one slice still counts.</p>
 
         <div class="chart-block">
           <div class="chart-title-row">
@@ -468,20 +463,32 @@
     var TYPE_NAMES  = ["Pepperoni & Jalapeño","Pepperoni","Hawaiian","Supreme","Other"];
     var BRAND_NAMES = ["Little Caesars","Domino's","Pizza Hut","Pizza Pirates","Other"];
 
-    // Per-pizza price by brand, by year -- prices climb with real menu inflation instead of
-    // staying flat. Little Caesars starts at the classic $5 Hot-N-Ready and creeps toward $6.60.
-    // Used to derive spend, same as a unit price on a PO/SO line item that changes over time.
-    var BRAND_PRICE_BY_YEAR = {
-      2021: { "Little Caesars":5.00, "Domino's":11.00, "Pizza Hut":11.50, "Pizza Pirates":14.00, "Other":11.00 },
-      2022: { "Little Caesars":5.40, "Domino's":11.90, "Pizza Hut":12.40, "Pizza Pirates":15.10, "Other":11.90 },
-      2023: { "Little Caesars":5.75, "Domino's":12.65, "Pizza Hut":13.25, "Pizza Pirates":16.10, "Other":12.65 },
-      2024: { "Little Caesars":6.00, "Domino's":13.20, "Pizza Hut":13.80, "Pizza Pirates":16.80, "Other":13.20 },
-      2025: { "Little Caesars":6.30, "Domino's":13.85, "Pizza Hut":14.50, "Pizza Pirates":17.65, "Other":13.85 },
-      2026: { "Little Caesars":6.60, "Domino's":14.50, "Pizza Hut":15.20, "Pizza Pirates":18.50, "Other":14.50 }
-    };
+    // Fixed per-pizza price by brand and type (no inflation modeling -- every pizza of a
+    // given type/brand costs the same regardless of year). Brand sets the base price;
+    // specialty toppings (Supreme, Hawaiian, "Other") add a small premium over plain Pepperoni.
+    var BASE_PRICE_BY_BRAND = { "Little Caesars":6.00, "Domino's":13.50, "Pizza Hut":14.00, "Pizza Pirates":17.00, "Other":13.00 };
+    var TYPE_PRICE_ADJ = { "Pepperoni & Jalapeño":0.50, "Pepperoni":0, "Hawaiian":1.00, "Supreme":2.00, "Other":1.50 };
+    var TAX_RATE = 0.0875;
+    var PIZZA_PRICE = {};
+    TYPE_NAMES.forEach(function(t){
+      PIZZA_PRICE[t] = {};
+      BRAND_NAMES.forEach(function(b){
+        PIZZA_PRICE[t][b] = Math.round((BASE_PRICE_BY_BRAND[b] + TYPE_PRICE_ADJ[t]) * 100) / 100;
+      });
+    });
 
-    // Average pizzas per order (a single order can be qty 1 or a family order of 3-4).
-    var AVG_QTY_PER_ORDER = 1.7;
+    // Pizzas per order varies a lot in real life -- solo cravings are qty 1-2, but Little
+    // Caesars Hot-N-Readys get bought in bulk and party orders (Supreme, "Other" catering
+    // flavors) run much higher (up to a dozen for an actual party). This drives Total
+    // Orders / Avg Qty per Order dynamically per year x type x brand cell instead of one
+    // flat number that never moved when the slicers changed.
+    var AVG_QTY_BASE_BY_YEAR = { 2021:1.35, 2022:1.55, 2023:1.75, 2024:2.05, 2025:2.35, 2026:1.65 };
+    var TYPE_QTY_MULT  = { "Pepperoni & Jalapeño":0.85, "Pepperoni":0.90, "Hawaiian":1.05, "Supreme":1.20, "Other":1.35 };
+    var BRAND_QTY_MULT = { "Little Caesars":1.30, "Domino's":0.85, "Pizza Hut":0.95, "Pizza Pirates":1.10, "Other":1.00 };
+
+    function avgQtyFor(y, t, b){
+      return Math.max(1, AVG_QTY_BASE_BY_YEAR[y] * TYPE_QTY_MULT[t] * BRAND_QTY_MULT[b]);
+    }
 
     // Which Type/Brand combinations can actually happen at all (0 = never ordered that
     // combo -- e.g. Little Caesars' limited menu doesn't really do a jalapeno specialty
@@ -578,6 +585,26 @@
       return YEARLY_TOTAL[y];
     }
 
+    // Sums per-cell (year x type x brand) order counts using that cell's own avg qty/order,
+    // rather than dividing by one flat number -- so Total Orders and Avg Qty/Order genuinely
+    // shift with the Year Range, Type, and Brand slicers instead of just Total Pizzas moving.
+    function computeOrders(years, ti, bi){
+      var totalPizzas = 0, totalOrders = 0;
+      years.forEach(function(y){
+        var m = matrixForYear(y);
+        TYPE_NAMES.forEach(function(t, i){
+          if(ti >= 0 && i !== ti) return;
+          BRAND_NAMES.forEach(function(b, j){
+            if(bi >= 0 && j !== bi) return;
+            var pizzas = m[i][j];
+            totalPizzas += pizzas;
+            totalOrders += pizzas / avgQtyFor(y, t, b);
+          });
+        });
+      });
+      return { totalPizzas: totalPizzas, totalOrders: totalOrders };
+    }
+
     var selectsBuilt = false;
     function buildSelectsOnce(){
       if(selectsBuilt) return;
@@ -626,49 +653,198 @@
         .forEach(function(item){ var o=document.createElement('option'); o.value=item.key; o.textContent=item.label; brandSel.appendChild(o); });
       brandSel.addEventListener('change', function(){ state.brand = brandSel.value; renderAll(); });
 
-      document.getElementById('csv-download-btn').addEventListener('click', downloadCSV);
+      document.getElementById('csv-download-btn').addEventListener('click', downloadDataset);
     }
 
-    // Exports the exact Year x Type x Brand detail the charts are computed from --
-    // same functions (matrixForYear, BRAND_PRICE_BY_YEAR) as the rendered visuals,
-    // so the download can never drift out of sync with what's on screen.
-    function downloadCSV(){
-      var rows = [['Year','Type','Brand','Quantity','Unit Price','Total Price']];
+    // ---- Order-level dataset generation --------------------------------------
+    // Rebuilds every matrix cell (matrixForYear) as actual multi-item orders instead
+    // of one aggregate row per year/type/brand. A seeded PRNG keeps the export
+    // identical across repeat downloads. Each cell's exact pizza count is first split
+    // into line quantities (splitCellIntoLines, biased by avgQtyFor so party-size
+    // brands/types skew toward bigger lines), so summing the exported line items
+    // always reconciles exactly to what's on screen -- never a qty-0 row.
+    function seededRandom(seed){
+      return function(){
+        seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+        var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    var QTY_BUCKETS = [1,2,3,4,6,8,12];
+    function pickLineQty(avgQty, remaining, rand){
+      var options = QTY_BUCKETS.filter(function(q){ return q <= remaining; });
+      if(options.length === 0) return remaining;
+      if(remaining <= QTY_BUCKETS[QTY_BUCKETS.length-1] && rand() < 0.35) return remaining;
+      var weights = options.map(function(q){ return 1/(1+Math.abs(q-avgQty)*0.8); });
+      var sum = weights.reduce(function(a,b){ return a+b; }, 0);
+      var r = rand()*sum, acc = 0;
+      for(var i=0;i<options.length;i++){ acc += weights[i]; if(r <= acc) return options[i]; }
+      return options[options.length-1];
+    }
+
+    function splitCellIntoLines(total, avgQty, rand){
+      var lines = [], remaining = total;
+      while(remaining > 0){
+        var q = pickLineQty(avgQty, remaining, rand);
+        lines.push(q);
+        remaining -= q;
+      }
+      return lines;
+    }
+
+    function weightedMonthPick(rand){
+      var r = rand(), acc = 0;
+      for(var i=0;i<12;i++){ acc += MONTH_SHAPE[i]; if(r <= acc) return i; }
+      return 11;
+    }
+
+    function daysInMonth(y, m){ return new Date(y, m+1, 0).getDate(); }
+    function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+
+    function shuffle(arr, rand){
+      for(var i=arr.length-1;i>0;i--){
+        var j = Math.floor(rand()*(i+1));
+        var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+      }
+    }
+
+    // An order is placed with exactly one pizzeria -- you don't get a Domino's box and
+    // a Little Caesars box on the same order. So lines are pooled and bundled PER BRAND
+    // (a single order can still mix multiple types from that brand), never across brands.
+    function generateOrders(){
+      var rand = seededRandom(1234567);
+      var orders = [];
+
       YEARS.forEach(function(y){
         var m = matrixForYear(y);
+        var poolByBrand = {};
+        BRAND_NAMES.forEach(function(b){ poolByBrand[b] = []; });
+
         TYPE_NAMES.forEach(function(t, i){
           BRAND_NAMES.forEach(function(b, j){
-            var qty = m[i][j];
-            var price = BRAND_PRICE_BY_YEAR[y][b];
-            var total = Math.round(qty * price * 100) / 100;
-            rows.push([y, t, b, qty, price.toFixed(2), total.toFixed(2)]);
+            if(AVAILABILITY[t][b] === 0) return;
+            var cellTotal = m[i][j];
+            if(cellTotal <= 0) return;
+            var lines = splitCellIntoLines(cellTotal, avgQtyFor(y, t, b), rand);
+            lines.forEach(function(qty){ poolByBrand[b].push({ type:t, brand:b, qty:qty }); });
           });
         });
-      });
-      var csv = rows.map(function(row){
-        return row.map(function(cell){
-          var s = String(cell);
-          return /[",\n]/.test(s) ? ('"' + s.replace(/"/g,'""') + '"') : s;
-        }).join(',');
-      }).join('\r\n');
 
-      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      var url = URL.createObjectURL(blob);
-      var a = document.createElement('a');
-      a.href = url;
-      a.download = 'kevin-pizza-sample-dataset.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+        BRAND_NAMES.forEach(function(b){
+          var pool = poolByBrand[b];
+          shuffle(pool, rand);
+
+          var idx = 0;
+          while(idx < pool.length){
+            var roll = rand();
+            var size = roll < 0.62 ? 1 : (roll < 0.88 ? 2 : 3);
+            size = Math.min(size, pool.length - idx);
+            var lines = pool.slice(idx, idx+size);
+            idx += size;
+            var month = weightedMonthPick(rand);
+            var day = 1 + Math.floor(rand() * daysInMonth(y, month));
+            orders.push({ year:y, month:month, day:day, lines:lines, sortKey:rand() });
+          }
+        });
+      });
+
+      // Number orders in date order so Order_Number reads like a real chronological
+      // order log, even though lines were pooled per brand above.
+      orders.sort(function(a, b){
+        if(a.year !== b.year) return a.year - b.year;
+        if(a.month !== b.month) return a.month - b.month;
+        if(a.day !== b.day) return a.day - b.day;
+        return a.sortKey - b.sortKey;
+      });
+      orders.forEach(function(o, i){ o.order_number = i+1; });
+
+      return orders;
+    }
+
+    // Tax applies once at the order level (on the order's subtotal), the way a real
+    // receipt works -- not re-applied on every line item.
+    function buildDatasetRows(){
+      var orders = generateOrders();
+      var orderRows = [], itemRows = [];
+
+      orders.forEach(function(o){
+        var grouped = {}, groupOrder = [];
+        o.lines.forEach(function(ln){
+          var key = ln.type + '||' + ln.brand;
+          if(!grouped[key]){ grouped[key] = { type:ln.type, brand:ln.brand, qty:0 }; groupOrder.push(key); }
+          grouped[key].qty += ln.qty;
+        });
+
+        var dateStr = pad2(o.day) + '/' + pad2(o.month+1) + '/' + o.year;
+        var subtotal = 0;
+
+        groupOrder.forEach(function(key){
+          var g = grouped[key];
+          var unitPrice = PIZZA_PRICE[g.type][g.brand];
+          var orderPrice = Math.round(g.qty * unitPrice * 100) / 100;
+          subtotal += orderPrice;
+          itemRows.push([o.order_number, g.type, g.brand, g.qty, orderPrice.toFixed(2)]);
+        });
+
+        subtotal = Math.round(subtotal * 100) / 100;
+        var tax = Math.round(subtotal * TAX_RATE * 100) / 100;
+        var total = Math.round((subtotal + tax) * 100) / 100;
+        orderRows.push([o.order_number, dateStr, subtotal.toFixed(2), tax.toFixed(2), total.toFixed(2)]);
+      });
+
+      return { orderRows: orderRows, itemRows: itemRows };
+    }
+
+    var xlsxLoading = null;
+    function ensureXLSX(){
+      if(window.XLSX) return Promise.resolve();
+      if(xlsxLoading) return xlsxLoading;
+      xlsxLoading = new Promise(function(resolve, reject){
+        var s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+      return xlsxLoading;
+    }
+
+    // Exports the exact per-year/type/brand pizza counts the charts are built from
+    // (matrixForYear) broken out as real orders + line items, so the workbook can
+    // never drift out of sync with what's on screen.
+    function downloadDataset(){
+      var btn = document.getElementById('csv-download-btn');
+      var originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Building dataset…';
+
+      ensureXLSX().then(function(){
+        var data = buildDatasetRows();
+        var ordersSheet = [['Order_Number','Date','Subtotal','Tax','Total_Price']].concat(data.orderRows);
+        var itemsSheet = [['Order_Number','Pizza_Type','Brand','Total_Qty','Order_Price']].concat(data.itemRows);
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(ordersSheet), 'Orders');
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(itemsSheet), 'Order Items');
+        XLSX.writeFile(wb, 'kevin-pizza-sample-dataset.xlsx');
+      }).catch(function(){
+        alert('Could not load the export library -- check your connection and try again.');
+      }).finally(function(){
+        btn.disabled = false;
+        btn.textContent = originalText;
+      });
     }
 
     function renderKpis(){
       var years = yearsInRange();
-      var total = years.reduce(function(s,y){ return s + filteredYearValue(y); }, 0);
-
       var ti = state.type === 'all' ? -1 : TYPE_NAMES.indexOf(state.type);
       var bi = state.brand === 'all' ? -1 : BRAND_NAMES.indexOf(state.brand);
+
+      var orders = computeOrders(years, ti, bi);
+      var total = orders.totalPizzas;
+
       var spendFiltered = 0;
       years.forEach(function(y){
         var m = matrixForYear(y);
@@ -676,7 +852,7 @@
           if(ti >= 0 && i !== ti) return;
           BRAND_NAMES.forEach(function(b, j){
             if(bi >= 0 && j !== bi) return;
-            spendFiltered += m[i][j] * BRAND_PRICE_BY_YEAR[y][b];
+            spendFiltered += m[i][j] * PIZZA_PRICE[t][b];
           });
         });
       });
@@ -688,8 +864,8 @@
 
       document.getElementById('kpi-total').textContent = Math.round(total).toLocaleString('en-US');
       document.getElementById('kpi-total-label').textContent = 'Total Pizzas' + suffix;
-      document.getElementById('kpi-orders').textContent = Math.round(total / AVG_QTY_PER_ORDER).toLocaleString('en-US');
-      document.getElementById('kpi-qty').textContent = AVG_QTY_PER_ORDER.toFixed(1);
+      document.getElementById('kpi-orders').textContent = Math.round(orders.totalOrders).toLocaleString('en-US');
+      document.getElementById('kpi-qty').textContent = orders.totalOrders ? (total / orders.totalOrders).toFixed(1) : '0.0';
       document.getElementById('kpi-years').textContent = String(years.length);
       document.getElementById('kpi-years-label').textContent = (years.length === 6) ? 'Years Tracked' : 'Years in Range';
       document.getElementById('kpi-spend').textContent = '$' + Math.round(spendFiltered).toLocaleString('en-US');
@@ -709,15 +885,23 @@
 
         var total = filteredYearValue(state.drillYear);
         var monthly = distribute(Math.round(total), MONTH_SHAPE);
-        var max = Math.max.apply(null, monthly);
-        var colW = 380/12, barMaxH = 84;
+        var max = Math.max.apply(null, monthly) || 1;
+        var n = monthly.length;
+        var xs = monthly.map(function(v, i){ return i * (380/(n-1)); });
+        var ys = monthly.map(function(v){ return 112 - (v/max) * 84; });
+        var pts = xs.map(function(x,i){ return x.toFixed(1)+','+ys[i].toFixed(1); }).join(' ');
+        var areaPts = pts + ' '+xs[n-1].toFixed(1)+',112 '+xs[0].toFixed(1)+',112';
+
         var html = '<line x1="0" y1="112" x2="380" y2="112" stroke="var(--border)" stroke-width="1"/>';
+        html += '<line x1="0" y1="72" x2="380" y2="72" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 4"/>';
+        html += '<line x1="0" y1="32" x2="380" y2="32" stroke="var(--border)" stroke-width="1" stroke-dasharray="2 4"/>';
+        html += '<polygon points="'+areaPts+'" fill="var(--acc)" opacity="0.14"/>';
+        html += '<polyline points="'+pts+'" fill="none" stroke="var(--acc-soft)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
         monthly.forEach(function(v, i){
-          var h = max ? (v/max)*barMaxH : 0;
-          var x = i*colW + colW*0.18, w = colW*0.64, y = 112 - h;
-          html += '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="3" fill="var(--acc)"/>';
-          html += '<text x="'+(x+w/2).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle" font-size="7.5" font-weight="700" fill="var(--ink)" font-family="Oswald, Inter, sans-serif">'+v.toLocaleString('en-US')+'</text>';
-          html += '<text x="'+(x+w/2).toFixed(1)+'" y="124" text-anchor="middle" font-size="8" fill="var(--muted)" font-family="Inter, sans-serif">'+MONTH_NAMES[i]+'</text>';
+          var anchor = i===0 ? 'start' : (i===n-1 ? 'end' : 'middle');
+          html += '<circle cx="'+xs[i].toFixed(1)+'" cy="'+ys[i].toFixed(1)+'" r="3.5" fill="var(--acc-soft)"/>';
+          html += '<text x="'+xs[i].toFixed(1)+'" y="'+(ys[i]-8).toFixed(1)+'" text-anchor="'+anchor+'" font-size="7.5" font-weight="700" fill="var(--ink)" font-family="Oswald, Inter, sans-serif">'+v.toLocaleString('en-US')+'</text>';
+          html += '<text x="'+xs[i].toFixed(1)+'" y="124" text-anchor="'+anchor+'" font-size="8" fill="var(--muted)" font-family="Inter, sans-serif">'+MONTH_NAMES[i]+'</text>';
         });
         svg.innerHTML = html;
         return;
